@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Index
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+      </div>
+    </div>
+
+    <section class="content">
+        <button id="openCreateModalBtn">Create New Project</button>
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-body">
+
+            <div class="container">
+                <div id="loading">Loading project data...</div>
+                <div id="user-data"></div>
+            </div>
+        
+            <!-- Create Project Modal -->
+            <div id="createProjectModal" class="modal">
+                <div class="modal-content">
+                    <span id="closeCreateModal" class="close-btn">&times;</span>
+                    <h2>Create New Project</h2>
+                    <form id="create-project-form">
+                        <input type="text" id="name" placeholder="Name" required />
+                        <textarea id="description" placeholder="Description" required></textarea>
+                        <button type="submit">Create Project</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Update Project Modal -->
+            <div id="updateProjectModal" class="modal">
+                <div class="modal-content">
+                    <span id="closeUpdateModal" class="close-btn">&times;</span>
+                    <h2>Update Project</h2>
+                    <form id="update-project-form">
+                        <input type="hidden" id="update-project-id" />
+                        <input type="text" id="update-name" placeholder="Name" required />
+                        <textarea id="update-description" placeholder="Description" required></textarea>
+                        <button type="submit">Update Project</button>
+                    </form>
+                </div>
+            </div>
+ 
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="{% static 'js/project.js' %}"></script> 
+  </div>
+{% endblock %}

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'todo',
     'user',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,18 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
@@ -106,6 +119,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = 'index'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -128,3 +144,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'user.User'

@@ -1,55 +1,62 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Data</title>
-    <link rel="stylesheet" href="{% static 'css/user.css' %}"> <!-- Link to the CSS file -->
-</head>
-<body>
-
-    <header>
-        <h1>User Data</h1>
-    </header>
-
-    <div class="container">
-        <!-- Display User Data -->
-        <div id="loading">Loading user data...</div>
-        <div id="user-data"></div>
+{% block title %}
+Index
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+      </div>
     </div>
 
-    <header>
-      <h1>Create New User</h1>
-  </header>
+    <section class="content">
+        <button id="openCreateModalBtn">Create New User</button>
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-body">
 
-  <div class="container">
-    <!-- User Creation Form -->
-    <form id="create-user-form">
-        <input type="text" id="first_name" placeholder="First Name" required />
-        <input type="text" id="last_name" placeholder="Last Name" required />
-        <input type="email" id="email" placeholder="Email" required />
-        <input type="password" id="password" placeholder="Password" minlength="8" required />
-        <button type="submit">Create User</button>
-    </form>
+            <div class="container">
+                <div id="loading">Loading user data...</div>
+                <div id="user-data"></div>
+            </div>
+        
+            <!-- Create User Modal -->
+            <div id="createUserModal" class="modal">
+                <div class="modal-content">
+                    <span id="closeCreateModal" class="close-btn">&times;</span>
+                    <h2>Create New User</h2>
+                    <form id="create-user-form">
+                        <input type="text" id="first_name" placeholder="First Name" required />
+                        <input type="text" id="last_name" placeholder="Last Name" required />
+                        <input type="email" id="email" placeholder="Email" required />
+                        <input type="password" id="password" placeholder="Password" minlength="8" required />
+                        <button type="submit">Create User</button>
+                    </form>
+                </div>
+            </div>            
+        
+            <!-- Update User Modal -->
+            <div id="updateUserModal" class="modal">
+                <div class="modal-content">
+                    <span id="closeUpdateModal" class="close-btn">&times;</span>
+                    <h2>Update User</h2>
+                    <form id="update-user-form">
+                        <input type="hidden" id="update-user-id" />
+                        <input type="text" id="update-first_name" placeholder="First Name" required />
+                        <input type="text" id="update-last_name" placeholder="Last Name" required />
+                        <input type="email" id="update-email" placeholder="Email" required />
+                        <input type="password" id="update-password" placeholder="New Password (Optional)" />
+                        <button type="submit">Update User</button>
+                    </form>
+                </div>
+            </div>            
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="{% static 'js/user.js' %}"></script> 
   </div>
-
-  <header>
-    <h1>Update User</h1>
-  </header>
-
-  <div class="container">
-    <!-- User Update Form -->
-    <form id="update-user-form">
-        <input type="hidden" id="update-user-id" />
-        <input type="text" id="update-first_name" placeholder="First Name" required />
-        <input type="text" id="update-last_name" placeholder="Last Name" required />
-        <input type="email" id="update-email" placeholder="Email" required />
-        <input type="password" id="update-password" placeholder="New Password (Optional)" />
-        <button type="submit">Update User</button>
-    </form>
-  </div>
-
-    <script src="{% static 'js/main.js' %}"></script> <!-- Link to the JavaScript file -->
-</body>
-</html>
+{% endblock %}
