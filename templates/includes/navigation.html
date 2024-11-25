@@ -5,7 +5,7 @@
     </div>
     <div class="header-menu">
         <ul>
-            <li><a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}">Home</a></li>
+            <li><a href="{% url 'project' %}" class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}">Project</a></li>
             <li><a href="{% url 'user' %}" class="{% if request.resolver_match.url_name == 'user' %}active{% endif %}">User Management</a></li>
             <li><a href="#">Services</a></li>
         </ul>          

@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    {{ project.name }} - ToDo List
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/todo.css' %}">
+<div class="content-wrapper">
+    <div class="content-header">
+        <h1>{{ project.name }}</h1>
+        <p>{{ project.description }}</p>
+        <button id="openCreateTodoModalBtn">Create New ToDo</button>
+    </div>
+
+    <div class="content-body">
+        <div id="createTodoModal" class="modal">
+            <div class="modal-content">
+                <span id="closeCreateTodoModal" class="close-btn">&times;</span>
+                <h3>Create ToDo</h3>
+                <form id="create-todo-form">
+                    <input type="hidden" id="todo-project-id" value="{{ project.id }}">
+                    <div>
+                        <label for="todo-title">Title:</label>
+                        <input type="text" id="todo-title" placeholder="Enter title" required>
+                    </div>
+                    <div>
+                        <label for="todo-description">Description:</label>
+                        <textarea id="todo-description" placeholder="Enter description"></textarea>
+                    </div>
+                    <div>
+                        <label for="todo-parent">Parent ToDo:</label>
+                        <select id="todo-parent">
+                        </select>
+                    </div>
+                    <div>
+                        <label for="todo-assigned-to">Assigned To:</label>
+                        <select id="todo-assigned-to">
+                            {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="todo-date-end">End Date:</label>
+                        <input type="date" id="todo-date-end" placeholder="Select end date">
+                    </div>
+                    
+                    <div>
+                        <label for="todo-critical">Critical:</label>
+                        <select id="todo-critical">
+                            <option value="normal">Normal</option>
+                            <option value="priority">Priority</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="todo-points">Points:</label>
+                        <input type="number" id="todo-points" placeholder="Enter points" min="0" required>
+                    </div>
+                    <button type="submit">Create</button>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Update ToDo Modal -->
+            <div id="updateTodoModal" class="modal">
+                <div class="modal-content">
+                    <span id="closeUpdateTodoModal" class="close-btn">&times;</span>
+                    <h3>Update ToDo</h3>
+                    <form id="update-todo-form">
+                        <input type="hidden" id="update-todo-id">
+                        <div>
+                            <label for="update-todo-title">Title:</label>
+                            <input type="text" id="update-todo-title" placeholder="Enter title" required>
+                        </div>
+                        <div>
+                            <label for="update-todo-description">Description:</label>
+                            <textarea id="update-todo-description" placeholder="Enter description"></textarea>
+                        </div>
+                        <div>
+                            <label for="update-todo-assigned-to">Assigned To:</label>
+                            <select id="update-todo-assigned-to">
+                                {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="update-todo-date-end">End Date:</label>
+                            <input type="date" id="update-todo-date-end" placeholder="Select end date">
+                        </div>                                               
+                        <div>
+                            <label for="update-todo-critical">Critical:</label>
+                            <select id="update-todo-critical">
+                                <option value="normal">Normal</option>
+                                <option value="priority">Priority</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="update-todo-points">Points:</label>
+                            <input type="number" id="update-todo-points" placeholder="Enter points" min="0" required>
+                        </div>
+                        <button type="submit">Update</button>
+                    </form>
+                </div>
+            </div>
+
+
+        <!-- ToDo List -->
+        <div id="todo-list">
+            <h3>ToDos</h3>
+        </div>
+
+
+        <div class="kanban-board">
+            <div class="kanban-column" id="free-field">
+                <h3>Free Field</h3>
+                <div class="kanban-items" id="free-field-items"></div>
+            </div>
+            <div class="kanban-column" id="ongoing">
+                <h3>Ongoing</h3>
+                <div class="kanban-items" id="ongoing-items"></div>
+            </div>
+            <div class="kanban-column" id="under-review">
+                <h3>Under Review</h3>
+                <div class="kanban-items" id="under-review-items"></div>
+            </div>
+            <div class="kanban-column" id="revised">
+                <h3>Revise</h3>
+                <div class="kanban-items" id="revised-items"></div>
+            </div>
+            <div class="kanban-column" id="rejected">
+                <h3>Rejected</h3>
+                <div class="kanban-items" id="rejected-items"></div>
+            </div>
+            <div class="kanban-column" id="completed">
+                <h3>Completed</h3>
+                <div class="kanban-items" id="completed-items"></div>
+            </div>
+        </div>
+        
+
+    </div>
+</div>
+<script src="{% static 'js/todo.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<script>
+    const kanbanColumns = document.querySelectorAll('.kanban-items');
+
+    kanbanColumns.forEach(column => {
+        new Sortable(column, {
+            group: 'kanban', // Allow items to be dragged between columns
+            animation: 150,
+            onEnd: async function (event) {
+                const todoId = event.item.dataset.todoId; // Get the parent ToDo ID
+                const newStatus = event.to.id.replace('-items', ''); // Extract the new status
+                
+                try {
+                    // Update parent status in the backend
+                    const response = await fetch(`/api/todo/${todoId}/`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                            'Authorization': `Token ${localStorage.getItem('token')}`,
+                        },
+                        body: JSON.stringify({ status: newStatus }),
+                    });
+                
+                    if (response.ok) {
+                        const updatedTodos = await response.json();
+                        console.log('Updated Todos:', updatedTodos); // Debug the response
+                        
+                        // Re-render the updated ToDos dynamically
+                        fetchToDos(document.getElementById('todo-project-id').value);
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Failed to update ToDo status:', errorData);
+                    }
+                } catch (error) {
+                    console.error('Error updating ToDo status:', error);
+                }
+            }
+        });
+    });
+    
+</script>
+{% endblock %}

@@ -15,8 +15,7 @@ function getCookie(name) {
 }
 
 const csrftoken = getCookie('csrftoken');
-
-// Fetch and display project data
+// Fetch and display project data as full-width cards
 async function fetchProjectData() {
     try {
         const response = await fetch('/api/project/', {
@@ -33,36 +32,21 @@ async function fetchProjectData() {
         const loadingDiv = document.getElementById('loading');
 
         if (data.length > 0) {
-            let formattedData = `
-                <h3>Project Information</h3>
-                <table class="user-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
+            let formattedData = `<div class="card-container">`; // Card container for full-width cards
             data.forEach(project => {
                 formattedData += `
-                    <tr id="project-${project.id}">
-                        <td>${project.id}</td>
-                        <td>${project.name}</td>
-                        <td>${project.description}</td>
-                        <td>
-                            <i class="fas fa-edit update-icon" onclick="loadProjectForUpdate(${project.id})" title="Update"></i>
-                            <i class="fas fa-trash delete-icon" onclick="deleteProject(${project.id})" title="Delete"></i>
-                        </td>
-                    </tr>
+                    <div class="project-card" id="project-${project.id}">
+                        <h3>${project.name}</h3>
+                        <p>${project.description}</p>
+                        <a href="/projects/${project.id}/">Go to Project</a>
+                        <div class="card-actions">
+                            <button class="edit-btn" onclick="loadProjectForUpdate(${project.id})">Edit</button>
+                            <button class="delete-btn" onclick="deleteProject(${project.id})">Delete</button>
+                        </div>
+                    </div>
                 `;
             });
-            formattedData += `
-                    </tbody>
-                </table>
-            `;
+            formattedData += `</div>`;
             userDataDiv.innerHTML = formattedData;
         } else {
             userDataDiv.innerHTML = `<p>No projects found.</p>`;
@@ -76,6 +60,9 @@ async function fetchProjectData() {
 }
 
 fetchProjectData();
+
+
+
 
 // Create a new project
 async function createProject(event) {
@@ -207,9 +194,17 @@ document.getElementById('closeUpdateModal').addEventListener('click', () => {
 function loadProjectForUpdate(projectId) {
     const projectDiv = document.getElementById(`project-${projectId}`);
     if (projectDiv) {
+        // Access the content directly from the project card elements
+        const name = projectDiv.querySelector('h3').textContent.trim(); // Get the name from the <h3> element
+        const description = projectDiv.querySelector('p').textContent.trim(); // Get the description from the <p> element
+
+        // Set the values in the update modal form
         document.getElementById('update-project-id').value = projectId;
-        document.getElementById('update-name').value = projectDiv.querySelector('td:nth-child(2)').textContent.trim();
-        document.getElementById('update-description').value = projectDiv.querySelector('td:nth-child(3)').textContent.trim();
+        document.getElementById('update-name').value = name;
+        document.getElementById('update-description').value = description;
+
+        // Display the update modal
         document.getElementById('updateProjectModal').style.display = 'flex';
     }
 }
+

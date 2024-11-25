@@ -1,29 +1,35 @@
-{% extends 'base.html' %}
-{% block title %}
-Index
-{% endblock %}
-{% block content %}
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="card">
-          <div class="card-body">
-           
-
-          </div>
-        </div>
-      </div>
+<!-- index.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="{% static 'css/portfolio.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to My Portfolio</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    <section id="about">
+        <h2>About Me</h2>
+        <p>Write about yourself here.</p>
     </section>
-    <!-- /.content -->
-  </div>
-{% endblock %}
+    <section id="projects">
+        <h2>My Projects</h2>
+        <p>Showcase your work.</p>
+    </section>
+    <section id="contact">
+        <h2>Contact</h2>
+        <p>Email: example@example.com</p>
+    </section>
+</body>
+</html>

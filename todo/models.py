@@ -16,6 +16,15 @@ class Project(models.Model):
 
 
 class ToDo(models.Model):
+    STATUS_CHOICES = [
+        ('free-field', 'Free Field'),
+        ('ongoing', 'Ongoing'),
+        ('under-review', 'Under Review'),
+        ('completed', 'Completed'),
+        ('rejected', 'Rejected'),
+        ('revised', 'Revised'),
+    ]
+
     CRITICAL_CHOICES = [
         ('normal', 'Normal'),
         ('priority', 'Priority'),
@@ -30,8 +39,12 @@ class ToDo(models.Model):
     )
     points = models.PositiveIntegerField(default=0)
     critical = models.CharField(max_length=10, choices=CRITICAL_CHOICES, default='normal')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='free-field')
     date_created = models.DateTimeField(auto_now_add=True)
     date_end = models.DateTimeField(null=True, blank=True)
+    parent = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE, related_name="sub_todos"
+    )
 
     def __str__(self):
         return self.title

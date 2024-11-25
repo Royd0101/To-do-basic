@@ -8,7 +8,7 @@ from rest_framework import status
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as django_login
 
-class Users(ModelViewSet):
+class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
 
     def get_queryset(self):
