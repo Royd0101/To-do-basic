@@ -1,9 +1,6 @@
-.card-container {
-    display: flex;
-    flex-direction: column; /* Stack cards vertically */
-    gap: 20px; /* Add space between cards */
+.content{
+    background-color: #fff;
 }
-
 .project-card {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -49,4 +46,8 @@
 .delete-btn {
     background-color: #dc3545;
     color: white;
+}
+
+.project-page .content {
+    background-color: #fff; /* White background */
 }

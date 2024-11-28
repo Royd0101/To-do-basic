@@ -47,18 +47,27 @@ class TodoViewSet(ModelViewSet):
     def perform_update(self, serializer):
         parent_todo = serializer.save()  # Save the parent ToDo
 
-        # Recursive function to update sub-tasks
+        # Recursive function to update sub-todos
         def update_sub_todos(todo, new_status):
             sub_todos = todo.sub_todos.all()
+            updated_subs = []
             for sub_todo in sub_todos:
                 sub_todo.status = new_status
                 sub_todo.save()
-                update_sub_todos(sub_todo, new_status)  # Recursive call for deeper sub-todos
+                updated_subs.append(sub_todo)
+                updated_subs.extend(update_sub_todos(sub_todo, new_status))  # Recursively update deeper sub-todos
+            return updated_subs
 
-        # Update sub-tasks only if the status is changed
+        # Update sub-tasks if the status field is updated
+        updated_sub_todos = []
         if 'status' in self.request.data:
             new_status = self.request.data['status']
-            update_sub_todos(parent_todo, new_status)
+            updated_sub_todos = update_sub_todos(parent_todo, new_status)
+
+        # Return the parent and all updated sub-tasks in the response
+        all_updated_todos = [parent_todo] + updated_sub_todos
+        serializer = self.get_serializer(all_updated_todos, many=True)
+        return Response(serializer.data)
 
 
     def retrieve(self, request, pk=None):

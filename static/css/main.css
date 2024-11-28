@@ -6,21 +6,10 @@
     transition: 0.3s ease all;
 }
 
-/* General Styling */
-body {
-    font-family: 'Roboto', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
-    color: #333;
-    font-size: 16px; /* Ensure consistent font size */
+.content{
+    background-color: #000;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-}
 
 /* Header Styling */
 .header {

@@ -53,7 +53,7 @@ async function login(event) {
         if (response.ok) {
             localStorage.setItem('token', data.token);
             alert('Login successful');
-            window.location.href = '/index';
+            window.location.href = '/project';
         } else {
             document.getElementById('error-message').innerText = data.detail || 'Invalid credentials';
         }
